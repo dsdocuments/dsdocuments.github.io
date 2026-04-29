@@ -3,499 +3,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>U.S. Advanced Manufacturing & Machining Report</title>
+    <title>DSDocs | Professional Document Preparation</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Chosen Palette: Warm neutral background (stone-50), crisp white cards, slate-800 for primary text, and teal-600/teal-700 for data accents and interactive elements. -->
-    <!-- Application Structure Plan: A tabbed dashboard interface updated with an AI Insights tab. This allows users to not only view raw data but also use LLM intelligence to interpret that data for specific professional needs like resumes or grant proposals. -->
-    <!-- Visualization & Content Choices: Added a dedicated "AI Insight Center" tab. 1. Strategic Summary tool -> Uses Gemini to convert report stats into narrative. 2. Interactive Q&A -> Allows users to probe the data. NO SVG or Mermaid used. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        .chart-container {
+        :root {
+            --ds-blue: #005696; /* Extracted from screenshots */
+            --ds-dark: #003a66;
+        }
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .serif { font-family: 'Playfair Display', serif; }
+        .bg-ds-blue { background-color: var(--ds-blue); }
+        .text-ds-blue { color: var(--ds-blue); }
+        .border-ds-blue { border-color: var(--ds-blue); }
+        
+        .hero-overlay {
+            background: linear-gradient(rgba(0, 58, 102, 0.8), rgba(0, 58, 102, 0.6));
+        }
+        
+        .nav-link {
             position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 400px;
+            transition: color 0.3s;
         }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: white;
+            transition: width 0.3s;
         }
-        body {
-            background-color: #fafaf9;
-            color: #1e293b;
-        }
-        .tab-btn.active {
-            border-bottom: 4px solid #0f766e;
-            color: #0f766e;
-            font-weight: 600;
-        }
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .loading-spinner {
-            border: 3px solid rgba(0, 0, 0, 0.1);
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border-left-color: #0f766e;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .nav-link:hover::after { width: 100%; }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
-<body class="font-sans antialiased min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-800">
 
-    <header class="bg-white shadow-sm border-b border-stone-200 py-6 px-4 md:px-8">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-                <h1 class="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight">
-                    <span class="text-teal-700">&#9881;&#65039;</span> Precision Manufacturing Analysis
-                </h1>
-                <p class="text-slate-500 mt-1 text-sm md:text-base">Economic & National Significance of Industrial Machining</p>
-            </div>
-            <div class="text-sm font-medium bg-teal-50 text-teal-800 px-4 py-2 rounded-full border border-teal-100">
-                Data Year: 2023 - 2033 Projections
+    <!-- Navigation -->
+    <nav class="bg-ds-blue text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center gap-2">
+                    <span class="text-3xl font-bold tracking-tight">DS<span class="font-light">Docs</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium uppercase tracking-wider">
+                    <a href="#home" class="nav-link">Home</a>
+                    <a href="#services" class="nav-link">Our Services</a>
+                    <a href="#about" class="nav-link">About Us</a>
+                    <a href="#philosophy" class="nav-link">Our Philosophy</a>
+                    <a href="#contact" class="nav-link">Contact Us</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
             </div>
         </div>
-    </header>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-ds-dark px-4 py-6 space-y-4 border-t border-blue-400/20">
+            <a href="#home" class="block">Home</a>
+            <a href="#services" class="block">Our Services</a>
+            <a href="#about" class="block">About Us</a>
+            <a href="#philosophy" class="block">Our Philosophy</a>
+            <a href="#contact" class="block">Contact Us</a>
+        </div>
+    </nav>
 
-    <main class="flex-grow max-w-6xl mx-auto w-full p-4 md:p-8">
-        
-        <nav class="flex overflow-x-auto border-b border-stone-300 mb-8 pb-1 scrollbar-hide">
-            <button class="tab-btn active px-6 py-3 text-slate-600 hover:text-teal-700 whitespace-nowrap transition-colors" data-target="workforce">
-                &#128101; Workforce & Skills Gap
-            </button>
-            <button class="tab-btn px-6 py-3 text-slate-600 hover:text-teal-700 whitespace-nowrap transition-colors" data-target="market">
-                &#128184; Market & Industry Value
-            </button>
-            <button class="tab-btn px-6 py-3 text-slate-600 hover:text-teal-700 whitespace-nowrap transition-colors" data-target="strategy">
-                &#127919; Strategic Importance
-            </button>
-            <button class="tab-btn px-6 py-3 text-teal-700 whitespace-nowrap transition-colors flex items-center gap-2" data-target="ai-insights">
-                <span>✨</span> AI Insights
-            </button>
-        </nav>
+    <!-- Hero Section -->
+    <section id="home" class="relative h-[600px] flex items-center justify-center text-center text-white">
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80');"></div>
+        <div class="absolute inset-0 hero-overlay"></div>
+        <div class="relative z-10 px-4 max-w-4xl">
+            <h2 class="text-xl md:text-2xl font-light tracking-[0.3em] uppercase mb-4">Your Document</h2>
+            <h1 class="serif text-5xl md:text-7xl mb-8">Is Our Priority</h1>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8">
+                <a href="#contact" class="px-8 py-3 border-2 border-white hover:bg-white hover:text-ds-blue transition-all font-bold uppercase tracking-widest text-sm">Contact Us</a>
+                <div class="flex items-center justify-center gap-6 mt-4 sm:mt-0">
+                    <a href="#" class="hover:text-blue-300 transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+                    <a href="#" class="hover:text-blue-300 transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></a>
+                    <a href="#" class="hover:text-blue-300 transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg></a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <!-- Tab: Workforce -->
-        <section id="workforce" class="tab-content active">
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-stone-100 mb-8">
-                <h2 class="text-xl font-semibold text-slate-800 mb-3">The Workforce Engine</h2>
-                <p class="text-slate-600 leading-relaxed max-w-4xl">
-                    This section details the critical labor metrics surrounding industrial machinery mechanics, maintenance workers, and millwrights. As the manufacturing sector rapidly integrates automation and hybrid processes, understanding these employment figures, wage standards, and the stark contrast in projected growth rates compared to the national average is vital for assessing current and future workforce needs.
+    <!-- Quick Info -->
+    <section class="py-16 bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-12">
+                <div>
+                    <h3 class="text-ds-blue font-bold text-lg mb-4">Round-the-clock service</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">Our company is deeply committed to your success. We prioritize your needs and work tirelessly to deliver exceptional service and solutions tailored to your specific goals. We are with you every step of the way.</p>
+                </div>
+                <div>
+                    <h3 class="text-ds-blue font-bold text-lg mb-4">Services at affordable prices</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">Our company offers top-tier immigration drafting services at affordable prices, ensuring you receive expert support without breaking the bank. Whether you need assistance with document preparation, translation, or case management.</p>
+                </div>
+                <div>
+                    <h3 class="text-ds-blue font-bold text-lg mb-4">Our business hours</h3>
+                    <p class="text-slate-600 text-sm font-medium">Mon - Fri: 9:00 am - 5:00 pm</p>
+                    <p class="text-slate-400 text-xs mt-2 italic">Weekend and After-hours support available via phone.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Highlights -->
+    <section class="bg-ds-blue text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-around text-center gap-8">
+                <div class="text-xl font-light tracking-widest">DISCREET</div>
+                <div class="text-xl font-light tracking-widest">SPEED</div>
+                <div class="text-xl font-light tracking-widest">DEPENDABILITY</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Services Section -->
+    <section id="services" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-16">
+                <h2 class="serif text-4xl text-ds-blue mb-6">Our Service to You</h2>
+                <p class="text-lg text-slate-600 max-w-5xl leading-relaxed">
+                    Our company specializes in document preparatory work for Immigration Firms, Attorneys, and institutions that need assistance with drafting letters of recommendation, CV - Resume, business plans, testimonial letters, and other related documents for both Family Based and EB - Employment Based Visas EB1, EB2 NIW, EB3, EB5.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="lg:col-span-1 flex flex-col gap-6">
-                    <div class="bg-teal-700 text-white p-6 rounded-xl shadow-md transition transform hover:-translate-y-1">
-                        <div class="text-teal-100 text-sm font-medium mb-1 uppercase tracking-wider">Total Jobs Held (2023)</div>
-                        <div class="text-4xl font-bold mb-2">530,800</div>
-                        <div class="text-sm opacity-90">Industrial machinery mechanics, maintenance workers, and millwrights.</div>
+            <div class="grid lg:grid-cols-3 gap-12">
+                <!-- Drafting -->
+                <div class="service-card transition-all duration-300">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400" alt="Drafting" class="w-full h-56 object-cover rounded-lg mb-6">
+                    <h3 class="serif text-2xl text-ds-blue mb-4">Drafting</h3>
+                    <ul class="space-y-2 text-slate-600 border-l-2 border-ds-blue pl-4">
+                        <li>• Testimonial Letters</li>
+                        <li>• Cover Letters</li>
+                        <li>• CV - Resume</li>
+                        <li>• Business Plans</li>
+                        <li>• Experience Letters</li>
+                    </ul>
+                </div>
+
+                <!-- Consulting -->
+                <div class="service-card transition-all duration-300">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=400" alt="Consulting" class="w-full h-56 object-cover rounded-lg mb-6">
+                    <h3 class="serif text-2xl text-ds-blue mb-4">Consulting</h3>
+                    <ul class="space-y-2 text-slate-600 border-l-2 border-ds-blue pl-4">
+                        <li>• Case Strategy</li>
+                        <li>• Operations Advisory</li>
+                        <li>• Workflow Mapping</li>
+                        <li>• Proofreads, Editing</li>
+                    </ul>
+                </div>
+
+                <div class="service-card transition-all duration-300">
+                    <img src="https://images.unsplash.com/photo-1454165833767-027ffea9e77b?auto=format&fit=crop&q=80&w=400" alt="Translations" class="w-full h-56 object-cover rounded-lg mb-6">
+                    <h3 class="serif text-2xl text-ds-blue mb-4">Translations</h3>
+                    <p class="text-slate-600 border-l-2 border-ds-blue pl-4">
+                        We translate documents in three main languages: English, Spanish, and Portuguese.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="py-24 bg-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <div class="w-full lg:w-1/2">
+                    <div class="relative">
+                        <div class="absolute -inset-4 bg-ds-blue opacity-10 rounded-lg"></div>
+                        <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80" alt="Justice" class="relative rounded-lg shadow-xl w-full">
                     </div>
+                </div>
+                <div class="w-full lg:w-1/2">
+                    <h2 class="serif text-4xl text-ds-blue mb-6">Who We Are</h2>
+                    <p class="text-xl text-slate-600 leading-relaxed mb-8">
+                        We aim to serve business professionals with document preparation services and assistance. Our goal is to be the background engine assisting you and your clients with all your document drafting needs.
+                    </p>
+                    <div class="p-6 bg-white rounded-lg shadow-sm border-l-4 border-ds-blue">
+                        <h4 class="font-bold text-ds-blue mb-2">Our Promise</h4>
+                        <p class="text-slate-600 text-sm">We approach each assignment with the same care and effort as if they were our very own. Confidentiality is assured.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophy & Promise -->
+    <section id="philosophy" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="serif text-4xl text-ds-blue mb-16">Our Philosophy</h2>
+            <div class="grid md:grid-cols-3 gap-12">
+                <div class="space-y-4">
+                    <h3 class="serif text-2xl text-ds-blue">Quality</h3>
+                    <p class="text-slate-600">Your clients are our clients. We approach each assignment with the same care and effort as if they were our very own.</p>
+                </div>
+                <div class="space-y-4">
+                    <h3 class="serif text-2xl text-ds-blue">Efficiency</h3>
+                    <p class="text-slate-600">Typical turn-around times are between 48-72 hours, depending on the scope of work. 24 Hour and Same Day service is also available.</p>
+                </div>
+                <div class="space-y-4">
+                    <h3 class="serif text-2xl text-ds-blue">Fair Prices</h3>
+                    <p class="text-slate-600">We provide the best work at the best price, staying within your budget while delivering top-tier legal drafting.</p>
+                </div>
+            </div>
+
+            <!-- Promise Highlights -->
+            <div class="mt-24 grid md:grid-cols-2 gap-12">
+                <div class="flex gap-6 items-start bg-slate-50 p-8 rounded-xl">
+                    <div class="w-16 h-16 bg-ds-blue/10 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg class="w-8 h-8 text-ds-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold mb-2">Discreet</h4>
+                        <p class="text-sm text-slate-500 font-bold uppercase tracking-widest mb-3">Confidentiality is Assured</p>
+                        <p class="text-slate-600">We are not on social media, we do not want a social media presence. Our goal is to be in the background assisting you and your clients.</p>
+                    </div>
+                </div>
+                <div class="flex gap-6 items-start bg-slate-50 p-8 rounded-xl">
+                    <div class="w-16 h-16 bg-ds-blue/10 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg class="w-8 h-8 text-ds-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold mb-2">Speed</h4>
+                        <p class="text-sm text-slate-500 font-bold uppercase tracking-widest mb-3">Fast, reliable service</p>
+                        <p class="text-slate-600">Our typical turnaround time for producing documents is 48-72 hours. 24 Hour and Same Day Service is also available.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="py-24 bg-ds-blue text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16">
+                <div>
+                    <h2 class="serif text-4xl mb-8">Contact Us</h2>
+                    <p class="text-blue-100 mb-12">We are here to help. Reach out to us via phone, email, or visit our registered office.</p>
                     
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 transition transform hover:-translate-y-1">
-                        <div class="text-slate-500 text-sm font-medium mb-1 uppercase tracking-wider">Median Annual Wage</div>
-                        <div class="text-3xl font-bold text-slate-800 mb-2">$61,170</div>
-                        <div class="text-sm text-slate-600">Exceeds overall labor force average, reflecting high occupational value.</div>
+                    <div class="space-y-8">
+                        <div>
+                            <h4 class="font-bold uppercase tracking-widest text-xs text-blue-200 mb-2">Phone</h4>
+                            <p class="text-lg">Business Hours: <a href="tel:+13057977317" class="hover:text-blue-300 transition-colors">+1 (305) 797-7317</a></p>
+                            <p class="text-lg">Weekend/After Hours: <a href="tel:+18643208814" class="hover:text-blue-300 transition-colors">+1 (864) 320-8814</a></p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold uppercase tracking-widest text-xs text-blue-200 mb-2">E-mail</h4>
+                            <a href="mailto:info@dsdocs.com" class="text-lg hover:text-blue-300 transition-colors">info@dsdocs.com</a>
+                        </div>
+                        <div>
+                            <h4 class="font-bold uppercase tracking-widest text-xs text-blue-200 mb-2">Registered Office Address</h4>
+                            <p class="text-lg">Hammett Grove Ln Greer, SC 29650</p>
+                        </div>
+                        <div class="flex gap-6 pt-4">
+                            <a href="#" class="p-3 bg-white/10 rounded hover:bg-white/20 transition-all"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+                        </div>
                     </div>
                 </div>
 
-                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-                    <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">Projected Job Growth (2023 - 2033)</h3>
-                    <div class="chart-container">
-                        <canvas id="growthChart"></canvas>
-                    </div>
-                    <p class="text-center text-sm text-slate-500 mt-4">Data Source: U.S. Bureau of Labor Statistics</p>
+                <div class="bg-white rounded-xl p-8 text-slate-800 shadow-2xl">
+                    <form class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Name*</label>
+                            <input type="text" class="w-full px-4 py-3 border border-slate-300 rounded focus:ring-2 focus:ring-ds-blue focus:border-ds-blue transition-all" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Message*</label>
+                            <textarea rows="6" class="w-full px-4 py-3 border border-slate-300 rounded focus:ring-2 focus:ring-ds-blue focus:border-ds-blue transition-all" required></textarea>
+                        </div>
+                        <p class="text-xs text-slate-400 font-medium italic">* Indicates required fields</p>
+                        <button type="submit" class="w-full bg-[#e67e22] hover:bg-[#d35400] text-white font-bold py-4 rounded uppercase tracking-widest transition-all shadow-lg">Send</button>
+                    </form>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Tab: Market -->
-        <section id="market" class="tab-content">
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-stone-100 mb-8">
-                <h2 class="text-xl font-semibold text-slate-800 mb-3">Industry Valuation & Expansion</h2>
-                <p class="text-slate-600 leading-relaxed max-w-4xl">
-                    This section highlights the massive financial footprint and projected economic expansion of the machining sector. By examining the valuation of U.S. machine shop services and the specific exponential growth forecasted for the CNC (Computer Numerical Control) machine tool market, users can comprehend the scale of investment and the critical industrial sectors dependent on these advanced manufacturing capabilities.
-                </p>
+    <!-- Footer -->
+    <footer class="py-12 bg-white text-center border-t">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-center gap-2 mb-8">
+                <span class="text-2xl font-bold tracking-tight text-ds-blue">DS<span class="font-light">Docs</span></span>
             </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-                    <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">Global CNC Machine Tool Market</h3>
-                    <div class="chart-container">
-                        <canvas id="marketChart"></canvas>
-                    </div>
-                    <p class="text-center text-sm text-slate-500 mt-4">Projected growth demonstrating sustained future demand.</p>
-                </div>
-
-                <div class="flex flex-col gap-6">
-                    <div class="bg-stone-800 text-stone-50 p-6 rounded-xl shadow-md">
-                        <div class="text-stone-300 text-sm font-medium mb-1 uppercase tracking-wider">U.S. Machine Shop Services</div>
-                        <div class="text-4xl font-bold text-teal-400 mb-2">~$44 Billion</div>
-                        <div class="text-sm">Estimated industry valuation by 2025.</div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 flex-grow">
-                        <h3 class="text-md font-bold text-slate-800 mb-3 border-b pb-2">Critical Sectors Supported</h3>
-                        <ul class="space-y-3 mt-4">
-                            <li class="flex items-center text-slate-700">
-                                <span class="text-teal-600 mr-3 text-lg">&#9642;</span> Automotive & Electric Vehicles (EVs)
-                            </li>
-                            <li class="flex items-center text-slate-700">
-                                <span class="text-teal-600 mr-3 text-lg">&#9642;</span> Advanced Aerospace Systems
-                            </li>
-                            <li class="flex items-center text-slate-700">
-                                <span class="text-teal-600 mr-3 text-lg">&#9642;</span> National Defense
-                            </li>
-                            <li class="flex items-center text-slate-700">
-                                <span class="text-teal-600 mr-3 text-lg">&#9642;</span> Construction & Heavy Machinery
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Tab: Strategy -->
-        <section id="strategy" class="tab-content">
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-stone-100 mb-8">
-                <h2 class="text-xl font-semibold text-slate-800 mb-3">Strategic Resurgence & Technology</h2>
-                <p class="text-slate-600 leading-relaxed max-w-4xl">
-                    This section synthesizes the qualitative and legislative drivers behind the domestic manufacturing renaissance. It explores how federal investments, reshoring efforts, and the adoption of cutting-edge technologies like AI and hybrid manufacturing are creating an urgent national need for a technologically adept workforce to maintain infrastructure and productive capacity.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white border-t-4 border-teal-600 p-6 rounded-b-xl shadow-sm hover:shadow-md transition">
-                    <div class="text-2xl mb-3">&#128220;</div>
-                    <h3 class="font-bold text-slate-800 mb-2">Legislative Catalysts</h3>
-                    <p class="text-sm text-slate-600">Significant federal investments via the <strong>CHIPS and Science Act</strong> and the <strong>Inflation Reduction Act</strong> are directly fueling a domestic manufacturing resurgence and reshoring efforts.</p>
-                </div>
-
-                <div class="bg-white border-t-4 border-teal-600 p-6 rounded-b-xl shadow-sm hover:shadow-md transition">
-                    <div class="text-2xl mb-3">&#129302;</div>
-                    <h3 class="font-bold text-slate-800 mb-2">Technological Integration</h3>
-                    <p class="text-sm text-slate-600">Rapid adoption of Automation, Artificial Intelligence (AI), and Hybrid Manufacturing (HASM) processes necessitates a highly skilled, technology-centered workforce.</p>
-                </div>
-
-                <div class="bg-white border-t-4 border-teal-600 p-6 rounded-b-xl shadow-sm hover:shadow-md transition">
-                    <div class="text-2xl mb-3">&#128295;</div>
-                    <h3 class="font-bold text-slate-800 mb-2">Precision Imperative</h3>
-                    <p class="text-sm text-slate-600">Precision machining (CNC and additive techniques) is non-negotiable for producing the complex components required by emerging industries like EVs and national defense.</p>
-                </div>
-            </div>
-
-            <div class="bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl p-8 text-center text-white shadow-lg relative overflow-hidden">
-                <div class="relative z-10">
-                    <h3 class="text-lg font-medium text-slate-300 mb-2 uppercase tracking-wide">NIST Aligned Research Finding</h3>
-                    <div class="text-5xl md:text-7xl font-extrabold text-teal-400 my-4">20% - 30%</div>
-                    <p class="text-xl md:text-2xl font-light">Increase in productivity through the adoption of automation technologies.</p>
-                </div>
-                <div class="absolute top-0 right-0 opacity-10 text-9xl transform translate-x-8 -translate-y-8 pointer-events-none">&#9881;</div>
-            </div>
-        </section>
-
-        <!-- Tab: AI Insights -->
-        <section id="ai-insights" class="tab-content">
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-stone-100 mb-8">
-                <h2 class="text-xl font-semibold text-slate-800 mb-3">✨ AI Insight Center</h2>
-                <p class="text-slate-600 leading-relaxed max-w-4xl">
-                    Utilize advanced machine learning to analyze the manufacturing report data. These tools are designed to help you synthesize strategic justifications for national interest, or evaluate how specific professional skills map to the industry's future.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Tool 1: Strategic Justification -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <span>📝</span> Strategic Justification Generator
-                    </h3>
-                    <p class="text-sm text-slate-600 mb-6">Convert the report's complex data into a professional narrative highlighting the national interest of advanced manufacturing.</p>
-                    <button id="generateSummaryBtn" class="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 px-4 rounded-lg transition shadow-md flex items-center justify-center gap-2">
-                        ✨ Generate Strategic Narrative
-                    </button>
-                    <div id="summaryOutput" class="mt-6 hidden">
-                        <div class="p-4 bg-teal-50 border border-teal-100 rounded-lg text-slate-800 text-sm leading-relaxed whitespace-pre-wrap"></div>
-                    </div>
-                </div>
-
-                <!-- Tool 2: Skill-to-Industry Bridge -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <span>🌉</span> Skills Bridge Evaluator
-                    </h3>
-                    <p class="text-sm text-slate-600 mb-4">Enter a specific skill or area of expertise to see how it aligns with the trends and growth projected in the report.</p>
-                    <input type="text" id="skillInput" placeholder="e.g. Robotics, Data Analysis, CAD Design..." class="w-full p-3 border border-stone-300 rounded-lg mb-4 focus:ring-2 focus:ring-teal-500 focus:outline-none">
-                    <button id="evaluateSkillBtn" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-4 rounded-lg transition shadow-md flex items-center justify-center gap-2">
-                        ✨ Analyze Skill Alignment
-                    </button>
-                    <div id="skillOutput" class="mt-6 hidden">
-                        <div class="p-4 bg-stone-50 border border-stone-200 rounded-lg text-slate-800 text-sm leading-relaxed whitespace-pre-wrap"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Custom Data Query -->
-            <div class="mt-8 bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                    <span>💬</span> Ask the Report
-                </h3>
-                <div class="flex gap-2">
-                    <input type="text" id="customQueryInput" placeholder="Ask a question about the data..." class="flex-grow p-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none">
-                    <button id="askBtn" class="bg-teal-600 hover:bg-teal-700 text-white font-bold px-6 py-3 rounded-lg transition shadow-md">
-                        ✨ Ask
-                    </button>
-                </div>
-                <div id="queryOutput" class="mt-6 hidden">
-                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 text-sm italic"></div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-sm mt-auto">
-        <p>Interactive Data Application powered by Advanced Analytics and ✨ Gemini AI</p>
+            <nav class="flex flex-wrap justify-center gap-8 text-sm font-medium uppercase tracking-widest text-slate-500 mb-8">
+                <a href="#home" class="hover:text-ds-blue">Home</a>
+                <a href="#services" class="hover:text-ds-blue">Our Services</a>
+                <a href="#about" class="hover:text-ds-blue">About Us</a>
+                <a href="#philosophy" class="hover:text-ds-blue">Our Philosophy</a>
+                <a href="#contact" class="hover:text-ds-blue">Contact Us</a>
+            </nav>
+            <p class="text-slate-400 text-xs">All rights reserved, DS Documents LLC.</p>
+            <p class="text-slate-400 text-xs mt-2">© 2019 - 2024</p>
+        </div>
     </footer>
 
-    <!-- Error/Notification Modal -->
-    <div id="modalOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl">
-            <h4 id="modalTitle" class="text-xl font-bold text-slate-800 mb-2">Notification</h4>
-            <p id="modalBody" class="text-slate-600 mb-6"></p>
-            <button id="modalCloseBtn" class="w-full bg-slate-800 text-white font-bold py-2 rounded-lg">Close</button>
-        </div>
-    </div>
-
     <script>
-        // --- Core Application State & Constants ---
-        const apiKey = ""; // Set by runtime
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const tabContents = document.querySelectorAll('.tab-content');
-        
-        let growthChartInstance = null;
-        let marketChartInstance = null;
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
 
-        const reportData = `
-            Economic & National Significance:
-            - 530,800 jobs in industrial machinery/maintenance in 2023.
-            - 15% projected growth (2023-2033), vs 4% national average.
-            - Median wage $61,170.
-            - U.S. machine shop industry: $44B by 2025.
-            - Global CNC market: $91B (2024) to $137B (2031).
-            - Key sectors: Aerospace, EV, Defense.
-            - Legislation: CHIPS Act, Inflation Reduction Act.
-            - NIST alignment: 20-30% productivity increase via automation.
-        `;
-
-        // --- Utility Functions ---
-        function showModal(title, message) {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalBody').innerText = message;
-            document.getElementById('modalOverlay').classList.remove('hidden');
-        }
-
-        document.getElementById('modalCloseBtn').onclick = () => {
-            document.getElementById('modalOverlay').classList.add('hidden');
-        };
-
-        async function callGemini(prompt, systemPrompt = "You are a data analyst expert in U.S. manufacturing.") {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
-
-            let retries = 0;
-            const maxRetries = 5;
-
-            while (retries <= maxRetries) {
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`API Error: ${response.status}`);
-                    }
-
-                    const data = await response.json();
-                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "No insights generated.";
-                } catch (error) {
-                    if (retries === maxRetries) {
-                        throw error;
-                    }
-                    const delay = Math.pow(2, retries) * 1000;
-                    await new Promise(res => setTimeout(res, delay));
-                    retries++;
-                }
-            }
-        }
-
-        function toggleLoading(btnId, isLoading) {
-            const btn = document.getElementById(btnId);
-            if (isLoading) {
-                btn.disabled = true;
-                btn.dataset.originalText = btn.innerHTML;
-                btn.innerHTML = `<div class="loading-spinner"></div> Processing...`;
-                btn.classList.add('opacity-75', 'cursor-not-allowed');
-            } else {
-                btn.disabled = false;
-                btn.innerHTML = btn.dataset.originalText;
-                btn.classList.remove('opacity-75', 'cursor-not-allowed');
-            }
-        }
-
-        // --- Feature Implementations ---
-
-        // 1. Strategic Summary
-        document.getElementById('generateSummaryBtn').addEventListener('click', async () => {
-            toggleLoading('generateSummaryBtn', true);
-            const output = document.getElementById('summaryOutput');
-            const outputText = output.querySelector('div');
-            
-            try {
-                const prompt = `Based on this data: ${reportData}, write a professional executive summary for a 'National Interest Waiver' or 'Strategic Business Proposal'. Focus on how the 15% growth rate and federal legislation make this field critically important to U.S. infrastructure and defense. Keep it around 250 words.`;
-                const result = await callGemini(prompt, "You are a strategic policy advisor for U.S. manufacturing.");
-                outputText.innerText = result;
-                output.classList.remove('hidden');
-            } catch (err) {
-                showModal("Analysis Error", "Failed to reach AI service. Please check your connection or try again later.");
-            } finally {
-                toggleLoading('generateSummaryBtn', false);
-            }
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
         });
 
-        // 2. Skill Bridge
-        document.getElementById('evaluateSkillBtn').addEventListener('click', async () => {
-            const skill = document.getElementById('skillInput').value.trim();
-            if (!skill) return showModal("Input Required", "Please enter a skill to evaluate.");
-
-            toggleLoading('evaluateSkillBtn', true);
-            const output = document.getElementById('skillOutput');
-            const outputText = output.querySelector('div');
-
-            try {
-                const prompt = `Data: ${reportData}. User Skill: ${skill}. Analyze how this skill fits into the advanced manufacturing resurgence. Mention specific sectors like EVs, Defense, or CNC technology if relevant. Be encouraging but professional.`;
-                const result = await callGemini(prompt, "You are a career consultant for technical industries.");
-                outputText.innerText = result;
-                output.classList.remove('hidden');
-            } catch (err) {
-                showModal("Analysis Error", "Failed to generate skill analysis.");
-            } finally {
-                toggleLoading('evaluateSkillBtn', false);
-            }
-        });
-
-        // 3. Custom Ask
-        document.getElementById('askBtn').addEventListener('click', async () => {
-            const query = document.getElementById('customQueryInput').value.trim();
-            if (!query) return;
-
-            toggleLoading('askBtn', true);
-            const output = document.getElementById('queryOutput');
-            const outputText = output.querySelector('div');
-
-            try {
-                const prompt = `Report Context: ${reportData}. Question: ${query}. Answer strictly based on the report data if possible, or provide logical industry context.`;
-                const result = await callGemini(prompt);
-                outputText.innerText = `AI Response: ${result}`;
-                output.classList.remove('hidden');
-            } catch (err) {
-                showModal("Error", "Could not process your question.");
-            } finally {
-                toggleLoading('askBtn', false);
-            }
-        });
-
-        // --- Chart & Navigation Logic ---
-        function initCharts() {
-            const growthCtx = document.getElementById('growthChart');
-            if (growthCtx && !growthChartInstance) {
-                growthChartInstance = new Chart(growthCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Mechanics & Millwrights', 'National Average (All Occupations)'],
-                        datasets: [{
-                            label: 'Projected Growth Rate (2023-2033)',
-                            data: [15, 4],
-                            backgroundColor: ['rgba(15, 118, 110, 0.8)', 'rgba(148, 163, 184, 0.5)'],
-                            borderColor: ['rgba(15, 118, 110, 1)', 'rgba(148, 163, 184, 1)'],
-                            borderWidth: 1,
-                            borderRadius: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { beginAtZero: true, title: { display: true, text: 'Percentage (%)' } }
-                        }
-                    }
-                });
-            }
-
-            const marketCtx = document.getElementById('marketChart');
-            if (marketCtx && !marketChartInstance) {
-                marketChartInstance = new Chart(marketCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['2024 Valuation', '2031 Projection'],
-                        datasets: [{
-                            label: 'Market Value (Billions USD)',
-                            data: [91, 137],
-                            backgroundColor: 'rgba(15, 118, 110, 0.8)',
-                            borderColor: 'rgba(15, 118, 110, 1)',
-                            borderWidth: 1,
-                            borderRadius: 4,
-                            barThickness: 60
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { beginAtZero: true, title: { display: true, text: 'Billions (USD)' } }
-                        }
-                    }
-                });
-            }
-        }
-
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                tabBtns.forEach(b => b.classList.remove('active'));
-                tabContents.forEach(c => c.classList.remove('active'));
-
-                btn.classList.add('active');
-                const targetId = btn.getAttribute('data-target');
-                document.getElementById(targetId).classList.add('active');
-
-                if (targetId !== 'ai-insights') initCharts();
+        // Close menu when link is clicked
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
             });
         });
-
-        window.onload = initCharts;
     </script>
 </body>
 </html>
