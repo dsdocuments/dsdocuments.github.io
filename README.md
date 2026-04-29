@@ -165,7 +165,7 @@
                 </div>
 
                 <div class="service-card transition-all duration-300">
-                    <img src="https://images.unsplash.com/photo-1454165833767-027ffea9e77b?auto=format&fit=crop&q=80&w=400" alt="Translations" class="w-full h-56 object-cover rounded-lg mb-6">
+                    <img src="https://free-images.com/sm/50d5/apple_desk_laptop_macbook.jpg" alt="Translations" class="w-full h-56 object-cover rounded-lg mb-6">
                     <h3 class="serif text-2xl text-ds-blue mb-4">Translations</h3>
                     <p class="text-slate-600 border-l-2 border-ds-blue pl-4">
                         We translate documents in three main languages: English, Spanish, and Portuguese.
